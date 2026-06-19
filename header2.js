@@ -1,25 +1,12 @@
-// deleteHeader.js - Xóa header tracking
+// deleteHeader.js - NightmarketServer
+const version = 'V1.0.3';
 
-function setHeaderValue(headers, key, value) {
-    var lowerKey = key.toLowerCase();
-    if (lowerKey in headers) {
-        headers[lowerKey] = value;
-    } else {
-        headers[key] = value;
-    }
+function setHeaderValue(e, a, d) {
+  var r = a.toLowerCase();
+  r in e ? e[r] = d : e[a] = d;
 }
 
-var modifiedHeaders = $request.headers || {};
-
-// Xóa cache headers
+var modifiedHeaders = $request.headers;
 setHeaderValue(modifiedHeaders, "X-RevenueCat-ETag", "");
-setHeaderValue(modifiedHeaders, "If-None-Match", "");
-setHeaderValue(modifiedHeaders, "Cache-Control", "no-cache");
-setHeaderValue(modifiedHeaders, "Pragma", "no-cache");
-
-// Xóa tracking headers
-setHeaderValue(modifiedHeaders, "X-Client-Version", "");
-setHeaderValue(modifiedHeaders, "X-Device-Id", "");
-setHeaderValue(modifiedHeaders, "X-Installation-Id", "");
-
+console.log("Modified Headers:", JSON.stringify(modifiedHeaders));
 $done({ headers: modifiedHeaders });
