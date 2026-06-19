@@ -63,68 +63,6 @@ if (match) {
   obj.subscriber.entitlements["Locket"] = xunn_entitlement;
 }
 
-// ========= THÊM XỬ LÝ BADGE ========= //
-function unlockBadges(data) {
-  if (!data || typeof data !== 'object') return;
-  
-  for (let key in data) {
-    let val = data[key];
-    
-    // Nếu key chứa "badge" hoặc "unlockable" hoặc "achievements"
-    if (key === 'badge' || key === 'badges' || key === 'unlockable' || key === 'achievements') {
-      if (Array.isArray(val)) {
-        val.forEach(item => {
-          if (typeof item === 'object') {
-            item.unlocked = true;
-            item.is_unlocked = true;
-            item.active = true;
-            item.locked = false;
-            item.unlocked_at = new Date().toISOString();
-            if (item.status) item.status = 'unlocked';
-          }
-        });
-      } else if (typeof val === 'object') {
-        val.unlocked = true;
-        val.is_unlocked = true;
-        val.active = true;
-        val.locked = false;
-        val.unlocked_at = new Date().toISOString();
-        if (val.status) val.status = 'unlocked';
-      }
-    }
-    
-    // Nếu key chứa từ "badge"
-    if (typeof key === 'string' && key.toLowerCase().includes('badge')) {
-      if (typeof val === 'object') {
-        val.unlocked = true;
-        val.is_unlocked = true;
-        val.active = true;
-        val.locked = false;
-        val.unlocked_at = new Date().toISOString();
-      }
-    }
-    
-    // Field locked/unlocked
-    if (key === 'locked' || key === 'is_locked') data[key] = false;
-    if (key === 'unlocked' || key === 'is_unlocked') data[key] = true;
-    if (key === 'active' || key === 'is_active') data[key] = true;
-    if (key === 'status' && (val === 'locked' || val === 'inactive')) data[key] = 'unlocked';
-    
-    // Đệ quy
-    if (typeof val === 'object') {
-      unlockBadges(val);
-    }
-  }
-}
-
-// Chạy hàm unlock badge trên toàn bộ obj
-unlockBadges(obj);
-
-// Nếu response có success false thì sửa
-if (obj.success === false) obj.success = true;
-if (obj.unlocked === false) obj.unlocked = true;
-if (obj.status === 'error') obj.status = 'success';
-
 // ========= Thêm thông báo và Log ========= //
 obj.Attention = " Vui lòng không bán hoặc chia sẻ cho người khác!";
 console.log("User-Agent:", ua);
