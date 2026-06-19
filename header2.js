@@ -1,23 +1,21 @@
-// deleteHeader.js - NightmarketServer
-// Updated - Xóa tracking headers
+// deleteHeader.js - Xóa header tracking để tránh bị phát hiện
 
-const version = 'V1.0.4';
-
-function setHeaderValue(e, a, d) {
-  var r = a.toLowerCase();
-  r in e ? e[r] = d : e[a] = d;
+function setHeaderValue(headers, key, value) {
+    var lowerKey = key.toLowerCase();
+    if (lowerKey in headers) {
+        headers[lowerKey] = value;
+    } else {
+        headers[key] = value;
+    }
 }
 
 var modifiedHeaders = $request.headers || {};
 
-// Xóa ETag - tránh cache
+// Xóa các header tracking
 setHeaderValue(modifiedHeaders, "X-RevenueCat-ETag", "");
-
-// Xóa thêm 1 số header tracking khác (tùy chọn)
 setHeaderValue(modifiedHeaders, "If-None-Match", "");
 setHeaderValue(modifiedHeaders, "X-Client-Version", "");
 setHeaderValue(modifiedHeaders, "X-Device-Id", "");
-
-console.log("Headers cleaned:", JSON.stringify(modifiedHeaders));
+setHeaderValue(modifiedHeaders, "X-Installation-Id", "");
 
 $done({ headers: modifiedHeaders });
